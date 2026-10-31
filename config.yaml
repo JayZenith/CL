@@ -1,0 +1,41 @@
+run_name: sft
+seed: 0
+output_dir: runs
+
+model: Qwen/Qwen3-0.6B-Base
+model_revision: da87bfb608c14b7cf20ba1ce41287e8de496c0cd
+
+data:
+  dataset: jayelm/natural-instructions
+  dataset_revision: bd6a8eb56bd2263763221764be6e73cb60e2b952
+  path: data/tasks.json
+  seed: 0        # task selection, order and splits; independent of the run seed
+  n_tasks: 100
+  n_train: 1000
+  n_eval: 100
+  max_len: 512
+
+# Full-parameter AdamW. Parameters stay float32; BF16 is autocast only.
+lr: 2.0e-5
+weight_decay: 0.01
+max_grad_norm: 1.0
+steps_per_task: 200   # optimizer steps
+batch_size: 8
+grad_accum: 2
+eval_batch_size: 32
+bf16: true
+gradient_checkpointing: true
+
+eval_curve_every: 50  # steps between evals of the current task
+eval_seen_every: 10   # tasks between evals of all seen tasks; the last task always runs one
+ckpt_every: 1         # tasks; overwrites latest.pt
+
+# Defaults are the paper's ViT setting. reinit_freq counts optimizer steps.
+swr:
+  enabled: false
+  utility_function: gradient   # gradient | magnitude | random
+  pruning_method: threshold    # threshold | proportional
+  reinit_strat: resample       # resample | mean
+  reinit_freq: 128
+  reinit_factor: 0.0005
+  decay_rate: 0.0
