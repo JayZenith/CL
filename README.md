@@ -151,12 +151,12 @@ At task 300, relearning old tasks (250–269) vs learning new ones (300–319), 
 ## Caveats
 
 - **k was picked on the test set.** There is no validation split. SWR's k was the best of 1e-5 to 1e-2 by test accuracy (100 tasks, seeds 0–1), and those seeds are reused in the final runs. The sweep logs were not kept.
-  - Example: try 4 values of k and keep the one with the best test score. Part of why it scored best may be luck on those seeds. Then its reported score is a bit too high, the same way the best of 4 coin-flip streaks looks better than a typical coin.
+  - Example: 4 values of k score 80.1%, 80.5%, 81.0% and 80.3% on the test set, and we keep the 81.0% one. Its real skill might be 80.5%, plus 0.5 points of luck on those exact images. Reporting 81.0% then overstates it a little. Picked on separate images, that luck wouldn't carry over to the test score.
   - Clean fix: pick k on images or seeds that are never used for the reported results.
   - Here it's minor: seeds 2–5 were never used to pick k, and SWR still beat plain on them.
 - **The no-head runs come from a different script.** `cil_multi.py` made them; `cil.py` made the other class-incremental runs. The training rules are the same (`test_multi.py` checks this), but each script turns the seed into random numbers differently.
   - Example: with seed 0, `cil.py` might put images 5, 812, 40… in the first batch, and `cil_multi.py` images 377, 9, 1103…. Same rules, different dice rolls.
-  - Effect: "SWR + replay" vs "SWR + replay, no head" also differs by normal seed-to-seed noise, not just by the head. That's noise, not bias, and it averages out over 6 seeds.
+  - Effect: "SWR + replay" vs "SWR + replay, no head" also differs by normal seed-to-seed noise, not just by the head. That's noise, not bias, and it averages out over 6 seeds. Both scripts are seeded and their results point the same way, so this is minor, just less tightly controlled than running every arm through one script.
 - **One small CNN on one dataset.** The findings may not hold for bigger models or other data.
 
 ## Reproduce
