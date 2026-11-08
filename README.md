@@ -89,6 +89,8 @@ The last two rows come from `pair.py` (`lop_cil/pair.csv`, which covers both fol
 - It is the best arm on every 2-class test. Among all classes, the recent tasks are still lost to the replayed classes' bias.
 - The replayed classes' head rows are still 3.6× larger, and weight aligning still hurts (`wa.csv`).
 
+![](results/figures/class_incremental_head_resets.png)
+
 ![](results/figures/class_incremental_plasticity.png)
 ![](results/figures/class_incremental_memory.png)
 ![](results/figures/class_incremental_new_vs_old.png)

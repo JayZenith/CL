@@ -20,9 +20,13 @@ arms:
 
 **swr keeps plasticity.** on new tasks 250-299, plain drops to 81.6%, swr stays at 85.5%. swr won on all 6 seeds.
 
+![](results/figures/class_incremental_plasticity.png)
+
 **no replay = no memory.** tasks 0-19 sit at 0% by task 300. the model only ever predicts the newest classes.
 
 **swr + replay remembers best.** tasks 0-19 among all 600 classes at task 300: swr + replay 30.1% and still going up, plain + replay 20.4% and dropping. chance is about 0.2%. swr + replay won on all 6 seeds.
+
+![](results/figures/class_incremental_memory.png)
 
 **the catch: swr was quietly erasing stuff.** i tested recent tasks (250-299, not replayed) on just their own 2 classes at the end. plain + replay still tells them apart at 73%. swr + replay: 53%, basically a coin flip. checked the head and the rows for classes it stopped training were sitting at exactly fresh-init size (0.578 vs 0.577 expected). swr was resetting them, because a class you stop training has near-zero gradient, so near-zero utility.
 
@@ -32,6 +36,8 @@ arms:
 - recent pairs back to 75.7%
 
 so the plasticity comes from swr on the body. the head resets were just deleting memory.
+
+![](results/figures/class_incremental_head_resets.png)
 
 **still unsolved: old-class bias.** replay arms label a lot of new images as the replayed classes. replayed head rows end up 3.4-4.3x bigger. rescaling them to the same size (weight aligning) made it worse, so the bias isn't just in the head.
 
@@ -49,6 +55,8 @@ so the fair comparison for swr + replay (84.5%) is swr + extra images (87.0%). r
 - replay of tasks 0-19: 84.9%
 
 so it's the old tasks that help, not just more images. dead units (neurons that never fire) at task 300: 3-4% without replay, even with extra images. about 0% with replay.
+
+![](results/figures/task_incremental_plasticity.png)
 
 ## what i think it means
 

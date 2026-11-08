@@ -88,3 +88,42 @@ figure("Class-incremental: new task, picking among all seen classes", "Test accu
        "Task (mean of each 50-task bin)",
        [(l, c, dash, binned(arm_dirs(cil, p), "test_acc_seen")) for p, l, c, dash in ARMS],
        OUT / "class_incremental_new_vs_old.png", "6 seeds. Replay arms mislabel some new images as old classes.")
+
+
+def pair_means(path):
+    per_arm = defaultdict(list)
+    for r in csv.DictReader(open(path)):
+        per_arm[r["run"].rsplit("_s", 1)[0]].append(100 * float(r["recent_pair"]))
+    return {a: mean(v) for a, v in per_arm.items()}
+
+
+pairs = {**pair_means(RESULTS / "lop_cil" / "pair.csv"), **pair_means(RESULTS / "lop_cil_nohead" / "pair.csv")}
+bars = [("SWR + replay", "swr_k0.01_f2048_rpt20b50_lr0.001", "#eb6834"),
+        ("Plain + replay", "bp_rpt20b50_lr0.001", "#2a78d6"),
+        ("SWR + replay,\nno head", "swr_k0.01_f2048_nohead_rpt20b50_lr0.001", "#1baf7a")]
+fig, ax = plt.subplots(figsize=(7, 3.2), dpi=150)
+fig.patch.set_facecolor(SURFACE)
+ax.set_facecolor(SURFACE)
+ys = range(len(bars))
+values = [pairs[k] for _, k, _ in bars]
+ax.barh(ys, values, height=0.6, color=[c for *_, c in bars], edgecolor=SURFACE, linewidth=2)
+for y, v in zip(ys, values):
+    ax.annotate(f"{v:.1f}%", (v, y), xytext=(6, 0), textcoords="offset points", va="center", fontsize=9, color=INK)
+ax.axvline(50, color=MUTED, lw=1, ls=(0, (3, 3)))
+ax.annotate("chance", (50, len(bars) - 0.45), xytext=(4, 0), textcoords="offset points", fontsize=8, color=MUTED)
+ax.set_yticks(list(ys), [b[0] for b in bars], fontsize=9, color=INK)
+ax.set_xlim(0, 100)
+ax.set_xlabel("Test accuracy (%)", fontsize=9, color=MUTED)
+ax.set_title("Recent tasks 250-299 (not replayed), own 2 classes, at task 300", loc="left", fontsize=11, color=INK,
+             pad=12)
+ax.grid(axis="x", color=GRID, lw=0.8)
+ax.set_axisbelow(True)
+ax.tick_params(colors=MUTED, labelsize=8, length=0)
+for side in ("top", "right", "bottom"):
+    ax.spines[side].set_visible(False)
+ax.spines["left"].set_color(GRID)
+fig.text(0.01, 0.01, "6 seeds. SWR's head resets erase classes it stops training; leaving out the head fixes it.",
+         fontsize=7, color=MUTED)
+fig.tight_layout(rect=(0, 0.04, 1, 1))
+fig.savefig(OUT / "class_incremental_head_resets.png", facecolor=SURFACE)
+plt.close(fig)
