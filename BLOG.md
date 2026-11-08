@@ -43,7 +43,12 @@ so the plasticity comes from swr on the body. the head resets were just deleting
 
 so the fair comparison for swr + replay (84.5%) is swr + extra images (87.0%). replay is 2.5 points worse at learning new tasks, and in exchange keeps 30% of tasks 0-19 instead of 0%.
 
-**task-incremental (the original setup, 3 seeds):** replaying tasks 0-19 also stopped plasticity loss, even for plain: 84.9% on new tasks vs 77.8% without. extra current-task images only got to 79.5%, so it's not just extra data. plain without replay had 3-4% dead units, replay arms had about 0.
+**replay in the original setup (task-incremental, own head per task, 3 seeds):** replaying tasks 0-19 also kept plain backprop learning new tasks, not just remembering old ones. new tasks 250-299, plain backprop:
+- no replay: 77.8%
+- 50 extra current-task images per batch: 79.5%
+- replay of tasks 0-19: 84.9%
+
+so it's the old tasks that help, not just more images. dead units (neurons that never fire) at task 300: 3-4% without replay, even with extra images. about 0% with replay.
 
 ## what i think it means
 
