@@ -1,4 +1,4 @@
-# swr + replay in class-incremental learning
+# swr and replay in class-incremental learning
 
 continual learning isn't about remembering everything. humans forget too. it's about being able to learn whatever's new, and holding on to what you replay. that's sutton's big world thing: the world's bigger than the model, so it can't keep everything anyway.
 
@@ -12,9 +12,9 @@ i made it class-incremental. one head for every class. at test time the model pi
 
 arms:
 - plain backprop
-- swr (sutton's lab, 2025): resets weights whose utility |w * grad| is tiny
+- swr (sutton's lab, 2025): resets weights whose utility `|w * grad|` is tiny
 - replay: keeps all images of tasks 0-19 and mixes 50 into every batch
-- swr + replay
+- swr and replay
 
 6 seeds each.
 
@@ -26,13 +26,13 @@ arms:
 
 **no replay = no memory.** tasks 0-19 sit at 0% by task 300. the model only ever predicts the newest classes.
 
-**swr + replay remembers best.** tasks 0-19 among all 600 classes at task 300: swr + replay 30.1% and still going up, plain + replay 20.4% and dropping. chance is about 0.2%. swr + replay won on all 6 seeds.
+**swr and replay remembers best.** tasks 0-19 among all 600 classes at task 300: swr and replay 30.1% and still going up, plain and replay 20.4% and dropping. chance is about 0.2%. swr and replay won on all 6 seeds.
 
 ![](results/figures/class_incremental_memory.png)
 
-**the catch: swr was quietly erasing stuff.** i tested recent tasks (250-299, not replayed) on just their own 2 classes at the end. plain + replay still tells them apart at 73%. swr + replay: 53%, basically a coin flip. checked the head: in swr, the rows for classes it stopped training sit at exactly fresh-init size (0.578, init is 0.577). in swr + replay the recent ones are at 0.633, almost back to init. in plain they stay at 1.0-1.3. swr was resetting them, because a class you stop training has near-zero gradient, so near-zero utility.
+**the catch: swr was quietly erasing stuff.** i tested recent tasks (250-299, not replayed) on just their own 2 classes at the end. plain and replay still tells them apart at 73%. swr and replay: 53%, basically a coin flip. checked the head: in swr, the rows for classes it stopped training sit at exactly fresh-init size (0.578, init is 0.577). in swr and replay the recent ones are at 0.633, almost back to init. in plain they stay at 1.0-1.3. swr was resetting them, because a class you stop training has near-zero gradient, so near-zero utility.
 
-**fix: don't run swr on the head.** swr + replay without the head:
+**fix: don't run swr on the head.** swr and replay without the head:
 - plasticity same, 84.5%
 - tasks 0-19 same, 29.5%
 - recent pairs back to 75.7%
@@ -49,7 +49,7 @@ so the plasticity comes from swr on the body. the head resets were just deleting
 - plain: no change, 81.6% either way
 - swr: 85.5% -> 87.0%
 
-so the fair comparison for swr + replay (84.5%) is swr + extra images (87.0%). replay is 2.5 points worse at learning new tasks, and in exchange keeps 30% of tasks 0-19 instead of 0%.
+so the fair comparison for swr and replay (84.5%) is swr with extra images (87.0%). replay is 2.5 points worse at learning new tasks, and in exchange keeps 30% of tasks 0-19 instead of 0%.
 
 **replay in the original setup (task-incremental, own head per task, 3 seeds):** replaying tasks 0-19 also kept plain backprop learning new tasks, not just remembering old ones. new tasks 250-299, plain backprop:
 - no replay: 77.8%
