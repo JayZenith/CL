@@ -37,7 +37,11 @@ so the plasticity comes from swr on the body. the head resets were just deleting
 
 ## controls
 
-**extra data?** gave the no-replay arms 50 extra current-task images per step, same count replay adds. plain didn't change (81.6%). swr went up a bit (87.0%). so replay costs swr about 2.5 points of plasticity, and that's what it pays for the memory.
+**is replay just more data?** replay adds 50 images to every batch. so i gave the no-replay arms 50 extra images per batch too, just from the current task instead of old ones.
+- plain: no change, 81.6% either way
+- swr: 85.5% -> 87.0%
+
+so the fair comparison for swr + replay (84.5%) is swr + extra images (87.0%). replay is 2.5 points worse at learning new tasks, and in exchange keeps 30% of tasks 0-19 instead of 0%.
 
 **task-incremental (the original setup, 3 seeds):** replaying tasks 0-19 also stopped plasticity loss, even for plain: 84.9% on new tasks vs 77.8% without. extra current-task images only got to 79.5%, so it's not just extra data. plain without replay had 3-4% dead units, replay arms had about 0.
 
