@@ -1,0 +1,63 @@
+---
+---
+
+@import "{{ site.theme }}";
+
+// Plain dark page with a red accent.
+$bg: #0e0e0e;
+$surface: #171717;
+$border: #2a2a2a;
+$text: #e8e6e3;
+$muted: #9a9894;
+$red: #e5484d;
+
+html, body { background: $bg; }
+
+body {
+  color: $text;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+.container-lg { max-width: 760px; }
+
+h1, h2, h3, h4 { color: #fff; font-weight: 650; letter-spacing: -0.01em; }
+.markdown-body h1, .markdown-body h2 { border-bottom: 1px solid $border; padding-bottom: 0.3em; }
+.markdown-body h1 { border-bottom: 2px solid $red; }
+
+a, .markdown-body a { color: $red; text-decoration: none; }
+a:hover, .markdown-body a:hover { text-decoration: underline; }
+
+strong { color: #fff; }
+
+.markdown-body code, .markdown-body tt {
+  background: $surface;
+  color: #f2b8b5;
+  border-radius: 4px;
+}
+.markdown-body pre, .markdown-body .highlight pre {
+  background: $surface;
+  border: 1px solid $border;
+  color: $text;
+}
+.markdown-body pre code { color: $text; }
+
+.markdown-body table { display: table; width: 100%; font-size: 15px; }
+.markdown-body table th, .markdown-body table td { border: 1px solid $border; }
+.markdown-body table th { background: $surface; color: #fff; }
+.markdown-body table tr { background: $bg; border-top: 1px solid $border; }
+.markdown-body table tr:nth-child(2n) { background: #131313; }
+
+.markdown-body blockquote { color: $muted; border-left: 3px solid $red; }
+.markdown-body hr { background: $border; }
+
+.markdown-body img {
+  background: transparent;
+  border-radius: 8px;
+  margin: 0.5em 0 1em;
+}
+
+.markdown-body ul li::marker { color: $red; }
+
+.footer { color: $muted; border-top: 1px solid $border; }
