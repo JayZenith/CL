@@ -1,0 +1,13 @@
+run,old_pair,recent_pair
+swr_k0.01_f2048_nohead_lr0.001_s0,0.48525,0.50910
+swr_k0.01_f2048_nohead_lr0.001_s1,0.49175,0.51400
+swr_k0.01_f2048_nohead_lr0.001_s2,0.53075,0.51060
+swr_k0.01_f2048_nohead_lr0.001_s3,0.50425,0.50530
+swr_k0.01_f2048_nohead_lr0.001_s4,0.50350,0.51710
+swr_k0.01_f2048_nohead_lr0.001_s5,0.50675,0.50600
+swr_k0.01_f2048_nohead_rpt20b50_lr0.001_s0,0.82200,0.74530
+swr_k0.01_f2048_nohead_rpt20b50_lr0.001_s1,0.85550,0.77690
+swr_k0.01_f2048_nohead_rpt20b50_lr0.001_s2,0.83125,0.74690
+swr_k0.01_f2048_nohead_rpt20b50_lr0.001_s3,0.84325,0.74330
+swr_k0.01_f2048_nohead_rpt20b50_lr0.001_s4,0.83200,0.76980
+swr_k0.01_f2048_nohead_rpt20b50_lr0.001_s5,0.83500,0.75720

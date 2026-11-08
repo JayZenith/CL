@@ -1,0 +1,4 @@
+after_task,probe_task,test_acc_learned,test_acc_now,first_epochs_90,first_epochs_95,first_epochs_99,relearn_epochs_90,relearn_epochs_95,relearn_epochs_99
+49,0,0.70000,0.48500,,,,12,20,30
+99,50,0.94000,0.80000,2,6,18,2,5,11
+149,100,0.76500,0.54500,15,18,24,10,14,20

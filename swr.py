@@ -85,8 +85,8 @@ class SelectiveWeightReinitialization(Optimizer):
 
 
 def build_swr(model, cfg):
-    """SWR over Qwen's MLP weights. Qwen3 initializes Linear weights as N(0, initializer_range)
-    and these layers have no bias, so the paper's init-distribution lookup reduces to one std."""
+    """SWR over the MLP weights. Llama-style models initialize Linear weights as
+    N(0, initializer_range) and these layers have no bias, so the paper's init-distribution lookup reduces to one std."""
     params = [p for n, p in model.named_parameters() if n.endswith(MLP_WEIGHTS)]
     assert len(params) == 3 * model.config.num_hidden_layers, "MLP parameter names changed"
     std = {"resample": model.config.initializer_range, "mean": 0.0}[cfg["reinit_strat"]]
