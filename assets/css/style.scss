@@ -1,63 +1,68 @@
 ---
 ---
 
-@import "{{ site.theme }}";
-
 // Plain dark page with a red accent.
 $bg: #0e0e0e;
-$surface: #171717;
-$border: #2a2a2a;
-$text: #e8e6e3;
-$muted: #9a9894;
+$surface: #161616;
+$border: #262626;
+$text: #e6e4e0;
+$muted: #8f8d89;
 $red: #e5484d;
 
-html, body { background: $bg; }
+* { box-sizing: border-box; }
+
+html { background: $bg; }
 
 body {
+  margin: 0;
   color: $text;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-  font-size: 17px;
-  line-height: 1.7;
+  font: 17px/1.75 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
-.container-lg { max-width: 760px; }
+.page { max-width: 720px; margin: 0 auto; padding: 72px 24px 96px; }
 
-h1, h2, h3, h4 { color: #fff; font-weight: 650; letter-spacing: -0.01em; }
-.markdown-body h1, .markdown-body h2 { border-bottom: 1px solid $border; padding-bottom: 0.3em; }
-.markdown-body h1 { border-bottom: 2px solid $red; }
-
-a, .markdown-body a { color: $red; text-decoration: none; }
-a:hover, .markdown-body a:hover { text-decoration: underline; }
-
-strong { color: #fff; }
-
-.markdown-body code, .markdown-body tt {
-  background: $surface;
-  color: #f2b8b5;
-  border-radius: 4px;
+h1, h2, h3 { color: #fff; line-height: 1.25; letter-spacing: -0.015em; }
+h1 { font-size: 2.1rem; font-weight: 700; margin: 0 0 1.5rem; }
+h2 {
+  font-size: 1.05rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em;
+  color: $red; margin: 3.5rem 0 1rem;
 }
-.markdown-body pre, .markdown-body .highlight pre {
-  background: $surface;
-  border: 1px solid $border;
-  color: $text;
+h3 { font-size: 1.1rem; margin: 2rem 0 0.75rem; }
+
+p, ul, ol, table, pre { margin: 0 0 1.25rem; }
+ul, ol { padding-left: 1.25rem; }
+li { margin: 0.2rem 0; }
+li::marker { color: $red; }
+
+strong { color: #fff; font-weight: 600; }
+
+a { color: $red; text-decoration: none; border-bottom: 1px solid rgba(229, 72, 77, 0.35); }
+a:hover { border-bottom-color: $red; }
+
+code {
+  font: 0.86em/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  background: $surface; border: 1px solid $border; border-radius: 4px; padding: 0.1em 0.35em;
 }
-.markdown-body pre code { color: $text; }
+pre { background: $surface; border: 1px solid $border; border-radius: 8px; padding: 16px; overflow-x: auto; }
+pre code { background: none; border: 0; padding: 0; }
 
-.markdown-body table { display: table; width: 100%; font-size: 15px; }
-.markdown-body table th, .markdown-body table td { border: 1px solid $border; }
-.markdown-body table th { background: $surface; color: #fff; }
-.markdown-body table tr { background: $bg; border-top: 1px solid $border; }
-.markdown-body table tr:nth-child(2n) { background: #131313; }
+blockquote { margin: 0 0 1.25rem; padding-left: 1rem; border-left: 2px solid $red; color: $muted; }
 
-.markdown-body blockquote { color: $muted; border-left: 3px solid $red; }
-.markdown-body hr { background: $border; }
+table { width: 100%; border-collapse: collapse; font-size: 0.9rem; display: block; overflow-x: auto; }
+th, td { padding: 8px 12px; border-bottom: 1px solid $border; text-align: left; }
+th { color: #fff; font-weight: 600; }
 
-.markdown-body img {
-  background: transparent;
-  border-radius: 8px;
-  margin: 0.5em 0 1em;
+img { display: block; max-width: 100%; border-radius: 10px; margin: 1.75rem 0 2rem; }
+
+hr { border: 0; border-top: 1px solid $border; margin: 3rem 0; }
+
+footer { margin-top: 4rem; padding-top: 1.5rem; border-top: 1px solid $border; font-size: 0.9rem; }
+footer a { color: $muted; border: 0; }
+footer a:hover { color: $red; }
+
+@media (max-width: 600px) {
+  body { font-size: 16px; }
+  .page { padding-top: 40px; }
+  h1 { font-size: 1.7rem; }
 }
-
-.markdown-body ul li::marker { color: $red; }
-
-.footer { color: $muted; border-top: 1px solid $border; }

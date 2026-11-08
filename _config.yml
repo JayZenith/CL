@@ -1,3 +1,2 @@
-theme: jekyll-theme-primer
 title: CL
 exclude: [runs, runs_cil, sweep, data, .venv]

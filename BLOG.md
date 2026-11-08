@@ -72,4 +72,4 @@ i don't buy adapters or harness hill-climbing as continual learning. the fix has
 - second dataset
 - one other reset method (continual backprop or shrink & perturb) to show the erasing isn't just swr
 
-code, logs and how to rerun everything: [README.md](README.md)
+code, logs and how to rerun everything: [github.com/JayZenith/CL](https://github.com/JayZenith/CL)
