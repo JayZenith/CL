@@ -1,12 +1,14 @@
 # swr + replay in class-incremental learning
 
+continual learning isn't about remembering everything. humans forget too. it's about being able to learn whatever's new, and holding on to what you replay. that's sutton's big world thing: the world's bigger than the model, so it can't keep everything anyway.
+
 ## the setup
 
 took dohare/sutton's continual imagenet. small cnn, 177k params. 300 tasks in a row, each task is 2 new imagenet classes at 32x32.
 
 their version resets the head at every task and only tests the current task, so it only measures plasticity: can the net still learn new stuff. nothing about memory.
 
-i made it class-incremental. one head for every class. at test time the model picks among every class it's seen, no hint which task the image came from. that's the real test.
+i made it class-incremental. one head for every class. at test time the model picks among every class it's seen, no hint which task the image came from. that's the real test. task-incremental is the easy version: the model only has to pick between the 2 classes of the task it's told it's on.
 
 arms:
 - plain backprop
@@ -62,9 +64,11 @@ so it's the old tasks that help, not just more images. dead units (neurons that 
 
 plasticity methods only ask "is this weight useful right now". they never ask "is this worth keeping". so they'll erase anything you're not actively training. memory has to come from replay, and resets have to stay out of what replay is protecting.
 
+i don't buy adapters or harness hill-climbing as continual learning. the fix has to be in the network's own machinery: how it updates, what it resets, what it replays.
+
 ## next
 
-- the model picks what to replay itself, like sleep, instead of a fixed set
+- the model picks what to replay itself. during sleep you replay stuff; the model should have something built in that's drawn to replaying what it thinks matters, instead of a fixed set
 - second dataset
 - one other reset method (continual backprop or shrink & perturb) to show the erasing isn't just swr
 
