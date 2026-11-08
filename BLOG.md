@@ -4,7 +4,7 @@
 
 took dohare/sutton's continual imagenet. small cnn, 177k params. 300 tasks in a row, each task is 2 new imagenet classes at 32x32.
 
-their version gives each task its own fresh head and only tests the current task, so it only measures plasticity: can the net still learn new stuff. nothing about memory.
+their version resets the head at every task and only tests the current task, so it only measures plasticity: can the net still learn new stuff. nothing about memory.
 
 i made it class-incremental. one head for every class. at test time the model picks among every class it's seen, no hint which task the image came from. that's the real test.
 
@@ -28,7 +28,7 @@ arms:
 
 ![](results/figures/class_incremental_memory.png)
 
-**the catch: swr was quietly erasing stuff.** i tested recent tasks (250-299, not replayed) on just their own 2 classes at the end. plain + replay still tells them apart at 73%. swr + replay: 53%, basically a coin flip. checked the head and the rows for classes it stopped training were sitting at exactly fresh-init size (0.578 vs 0.577 expected). swr was resetting them, because a class you stop training has near-zero gradient, so near-zero utility.
+**the catch: swr was quietly erasing stuff.** i tested recent tasks (250-299, not replayed) on just their own 2 classes at the end. plain + replay still tells them apart at 73%. swr + replay: 53%, basically a coin flip. checked the head: in swr, the rows for classes it stopped training sit at exactly fresh-init size (0.578, init is 0.577). in swr + replay the recent ones are at 0.633, almost back to init. in plain they stay at 1.0-1.3. swr was resetting them, because a class you stop training has near-zero gradient, so near-zero utility.
 
 **fix: don't run swr on the head.** swr + replay without the head:
 - plasticity same, 84.5%
