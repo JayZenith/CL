@@ -1,0 +1,54 @@
+# swr + replay in class-incremental learning
+
+## the setup
+
+took dohare/sutton's continual imagenet. small cnn, 177k params. 300 tasks in a row, each task is 2 new imagenet classes at 32x32.
+
+their version gives each task its own fresh head and only tests the current task, so it only measures plasticity: can the net still learn new stuff. nothing about memory.
+
+i made it class-incremental. one head for every class. at test time the model picks among every class it's seen, no hint which task the image came from. that's the real test.
+
+arms:
+- plain backprop
+- swr (sutton's lab, 2025): resets weights whose utility |w * grad| is tiny
+- replay: keeps all images of tasks 0-19 and mixes 50 into every batch
+- swr + replay
+
+6 seeds each.
+
+## what happened
+
+**swr keeps plasticity.** on new tasks 250-299, plain drops to 81.6%, swr stays at 85.5%. swr won on all 6 seeds.
+
+**no replay = no memory.** tasks 0-19 sit at 0% by task 300. the model only ever predicts the newest classes.
+
+**swr + replay remembers best.** tasks 0-19 among all 600 classes at task 300: swr + replay 30.1% and still going up, plain + replay 20.4% and dropping. chance is about 0.2%. swr + replay won on all 6 seeds.
+
+**the catch: swr was quietly erasing stuff.** i tested recent tasks (250-299, not replayed) on just their own 2 classes at the end. plain + replay still tells them apart at 73%. swr + replay: 53%, basically a coin flip. checked the head and the rows for classes it stopped training were sitting at exactly fresh-init size (0.578 vs 0.577 expected). swr was resetting them, because a class you stop training has near-zero gradient, so near-zero utility.
+
+**fix: don't run swr on the head.** swr + replay without the head:
+- plasticity same, 84.5%
+- tasks 0-19 same, 29.5%
+- recent pairs back to 75.7%
+
+so the plasticity comes from swr on the body. the head resets were just deleting memory.
+
+**still unsolved: old-class bias.** replay arms label a lot of new images as the replayed classes. replayed head rows end up 3.4-4.3x bigger. rescaling them to the same size (weight aligning) made it worse, so the bias isn't just in the head.
+
+## controls
+
+**extra data?** gave the no-replay arms 50 extra current-task images per step, same count replay adds. plain didn't change (81.6%). swr went up a bit (87.0%). so replay costs swr about 2.5 points of plasticity, and that's what it pays for the memory.
+
+**task-incremental (the original setup, 3 seeds):** replaying tasks 0-19 also stopped plasticity loss, even for plain: 84.9% on new tasks vs 77.8% without. extra current-task images only got to 79.5%, so it's not just extra data. plain without replay had 3-4% dead units, replay arms had about 0.
+
+## what i think it means
+
+plasticity methods only ask "is this weight useful right now". they never ask "is this worth keeping". so they'll erase anything you're not actively training. memory has to come from replay, and resets have to stay out of what replay is protecting.
+
+## next
+
+- the model picks what to replay itself, like sleep, instead of a fixed set
+- second dataset
+- one other reset method (continual backprop or shrink & perturb) to show the erasing isn't just swr
+
+code, logs and how to rerun everything: [README.md](README.md)

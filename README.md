@@ -45,7 +45,7 @@ Only the `lop_cil*/` folders are class-incremental. Everything else is task-incr
 | New task, own 2 classes, tasks 250–299 | 81.6% | 81.6% | 82.5% | 85.5% | 87.0% | 84.5% |
 | New task, all seen classes, tasks 250–299 | 81.6% | 81.6% | 61.9% | 85.5% | 87.0% | 47.5% |
 | Tasks 0–19 among all seen, at task 50 | 0% | 0% | 25.4% | 0% | 0% | 28.0% |
-| Tasks 0–19 among all seen, at task 300 | 0% | 0% | 20.4% | 0% | 0% | 30.2% |
+| Tasks 0–19 among all seen, at task 300 | 0% | 0% | 20.4% | 0% | 0% | 30.1% |
 | Tasks 0–19 among only their 40 classes, at task 300 | 2.6% | 2.7% | 27.7% | 2.3% | 2.8% | 32.3% |
 | All 600 classes, at task 300 | 0.3% | 0.3% | 1.6% | 0.3% | 0.3% | 2.2% |
 | Tasks 0–19, own 2 classes, at task 300 | 51.9% | 49.2% | 79.3% | 49.6% | 49.9% | 82.7% |
@@ -58,16 +58,16 @@ The last two rows come from `pair.py` (`lop_cil/pair.csv`, which covers both fol
 - **Memory without replay:** none. The model only predicts the newest classes, which is why its two "new task" rows are equal.
 - **Memory with replay:**
   - SWR + replay holds tasks 0–19 better over time, rising, while plain + replay decays. SWR + replay was ahead on all 6 seeds.
-  - For SWR + replay, most errors are confusions among those 40 classes (32.3% vs 30.2%). Plain + replay loses more to newer classes (27.7% vs 20.4%).
+  - For SWR + replay, most errors are confusions among those 40 classes (32.3% vs 30.1%). Plain + replay loses more to newer classes (27.7% vs 20.4%).
 - **Cost of replay:** new images get labeled as replayed classes. SWR + replay does this most (47.5%).
-- **Classes not replayed:** forgotten within a few tasks in every arm. At task 300, tasks 250–299 are at 1–2% among all seen classes.
+- **Classes not replayed:** forgotten within a few tasks in every arm. At task 300, tasks 250–299 are under 2% among all seen classes (0.7–1.9%).
   - Plain + replay is the exception on the 2-class test: it still tells tasks 250–299's pairs apart at 73.1%, against about 50–53% in every other arm, SWR + replay included. Cause, from head row norms at task 300: SWR resets the head rows of classes it no longer trains, whose utility falls toward zero.
     - In SWR, the rows of untrained classes have norm 0.578. A freshly initialized row has 0.577.
     - In SWR + replay, tasks 250–297's rows are at 0.633.
     - In plain arms they stay at 1.0–1.3.
 - **Head bias (`wa.py`, `wa.csv`):**
   - Replayed classes end up with head rows 3.4–4.3× larger than other classes.
-  - Scaling every row to the mean norm, a simple form of weight aligning ([Zhao et al. 2020](https://arxiv.org/abs/1911.07053)), makes things worse. SWR + replay drops from 30.2% to 15.7% on tasks 0–19, and from 2.2% to 1.4% on all classes.
+  - Scaling every row to the mean norm, a simple form of weight aligning ([Zhao et al. 2020](https://arxiv.org/abs/1911.07053)), makes things worse. SWR + replay drops from 30.1% to 15.7% on tasks 0–19, and from 2.2% to 1.4% on all classes.
   - So the bias is not only in the head's scale.
 
 ### SWR without the head
@@ -78,7 +78,7 @@ The last two rows come from `pair.py` (`lop_cil/pair.csv`, which covers both fol
 |---|---|---|---|---|---|
 | New task, own 2 classes, tasks 250–299 | 85.5% | 85.7% | 84.5% | 84.5% | 82.5% |
 | New task, all seen classes, tasks 250–299 | 85.5% | 85.7% | 47.5% | 46.7% | 61.9% |
-| Tasks 0–19 among all seen | 0% | 0% | 30.2% | 29.5% | 20.4% |
+| Tasks 0–19 among all seen | 0% | 0% | 30.1% | 29.5% | 20.4% |
 | Tasks 0–19, own 2 classes | 49.6% | 50.4% | 82.7% | 83.7% | 79.3% |
 | Tasks 250–299, own 2 classes | 50.7% | 51.0% | 53.3% | **75.7%** | 73.1% |
 
