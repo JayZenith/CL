@@ -53,11 +53,11 @@ Only the `lop_cil*/` folders are class-incremental. Everything else is task-incr
 
 The last two rows come from `pair.py` (`lop_cil/pair.csv`, which covers both folders). The 2-class rows have 50% chance. At task 300, the all-seen rows have about 0.2% chance.
 
-- **Plasticity:** SWR keeps it. Plain loses about 4 points. SWR was ahead on all 6 seeds.
-- **Extra images:** no change for plain, +1.5 points for SWR. Against this control, replay costs SWR 2.5 points of plasticity and buys its memory of tasks 0–19.
+- **Plasticity:** SWR keeps it. Plain loses about 4 points. SWR was ahead on all 6 seeds (+3.9, 95% CI +3.4 to +4.4).
+- **Extra images:** no change for plain, +1.5 points for SWR. Against this control, replay costs SWR 2.6 points of plasticity (CI +1.9 to +3.2) and buys its memory of tasks 0–19.
 - **Memory without replay:** none. The model only predicts the newest classes, which is why its two "new task" rows are equal.
 - **Memory with replay:**
-  - SWR + replay holds tasks 0–19 better over time, rising, while plain + replay decays. SWR + replay was ahead on all 6 seeds.
+  - SWR + replay holds tasks 0–19 better over time, rising, while plain + replay decays. SWR + replay was ahead on all 6 seeds (+9.8, CI +8.8 to +10.8).
   - For SWR + replay, most errors are confusions among those 40 classes (32.3% vs 30.1%). Plain + replay loses more to newer classes (27.7% vs 20.4%).
 - **Cost of replay:** new images get labeled as replayed classes. SWR + replay does this most (47.5%).
 - **Classes not replayed:** forgotten within a few tasks in every arm. At task 300, tasks 250–299 are under 2% among all seen classes (0.7–1.9%).
@@ -82,14 +82,30 @@ The last two rows come from `pair.py` (`lop_cil/pair.csv`, which covers both fol
 | Tasks 0–19, own 2 classes | 49.6% | 50.4% | 82.7% | 83.7% | 79.3% |
 | Tasks 250–299, own 2 classes | 50.7% | 51.0% | 53.3% | **75.7%** | 73.1% |
 
-- Plasticity comes from SWR on the body. Leaving out the head changes nothing there.
-- With replay, leaving out the head keeps recent tasks' pairs apart: 75.7% vs 53.3%, slightly above plain + replay.
+- Plasticity comes from SWR on the body. Leaving out the head changes nothing there (+0.1, CI −0.4 to +0.6).
+- With replay, leaving out the head keeps recent tasks' pairs apart: 75.7% vs 53.3% (+22.4, CI +20.5 to +24.2), and 2.6 above plain + replay (CI +1.8 to +3.3).
   - Its recent-class head rows stay at norm 1.07 instead of being reset to about 0.58.
-  - Memory of tasks 0–19 is unchanged.
+  - Memory of tasks 0–19 is 0.6 points lower: 29.5% vs 30.1% (CI −1.1 to −0.1). Small, but consistent across seeds.
 - It is the best arm on every 2-class test. Among all classes, the recent tasks are still lost to the replayed classes' bias.
 - The replayed classes' head rows are still 3.6× larger, and weight aligning still hurts (`wa.csv`).
 
 ![](results/figures/class_incremental_head_resets.png)
+
+### Confidence intervals
+
+`ci.py`, saved in `results/ci.csv`. Paired by seed (each seed has the same class order in every arm), 95% t-interval over 6 seeds. Differences use unrounded means.
+
+| Comparison | Difference | 95% CI | Seeds ahead |
+|---|---|---|---|
+| New tasks 250–299: SWR vs plain | +3.9 | +3.4 to +4.4 | 6/6 |
+| New tasks 250–299: SWR + extra images vs SWR + replay | +2.6 | +1.9 to +3.2 | 6/6 |
+| Tasks 0–19 at task 300: SWR + replay vs plain + replay | +9.8 | +8.8 to +10.8 | 6/6 |
+| New tasks 250–299: SWR + replay, no head vs with head | +0.1 | −0.4 to +0.6 | 3/6 |
+| Tasks 0–19 at task 300: SWR + replay, no head vs with head | −0.6 | −1.1 to −0.1 | 1/6 |
+| Tasks 250–299 pairs: SWR + replay, no head vs with head | +22.4 | +20.5 to +24.2 | 6/6 |
+| Tasks 250–299 pairs: SWR + replay, no head vs plain + replay | +2.6 | +1.8 to +3.3 | 6/6 |
+
+A CI that excludes 0 means the gap is bigger than seed-to-seed noise. The no-head rows also carry the different-script caveat below.
 
 ![](results/figures/class_incremental_plasticity.png)
 ![](results/figures/class_incremental_memory.png)
@@ -212,6 +228,7 @@ Differences from Dohare's code: test accuracy is measured only after the last ep
 - `analyze.py`, `analyze_cil.py`: accuracy in 50-task bins.
 - `units.py`: dead units, mean |weight| and effective rank.
 - `wa.py`: the head-norm alignment check.
+- `ci.py`: paired 95% confidence intervals for the class-incremental comparisons.
 - `pair.py`: 2-class accuracy of old and recent tasks on final class-incremental checkpoints.
 - `plots.py`: the figures in `results/figures/`.
 

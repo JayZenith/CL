@@ -1,0 +1,8 @@
+comparison,a,b,diff,ci_low,ci_high,a_wins
+New tasks 250-299: SWR vs plain,85.5,81.6,+3.9,+3.4,+4.4,6/6
+New tasks 250-299: SWR + extra images vs SWR + replay,87.0,84.5,+2.6,+1.9,+3.2,6/6
+Tasks 0-19 at task 300: SWR + replay vs plain + replay,30.1,20.4,+9.8,+8.8,+10.8,6/6
+New tasks 250-299: SWR + replay (no head) vs SWR + replay,84.5,84.5,+0.1,-0.4,+0.6,3/6
+Tasks 0-19 at task 300: SWR + replay (no head) vs SWR + replay,29.5,30.1,-0.6,-1.1,-0.1,1/6
+Tasks 250-299 pairs at task 300: SWR + replay (no head) vs SWR + replay,75.7,53.3,+22.4,+20.5,+24.2,6/6
+Tasks 250-299 pairs at task 300: SWR + replay (no head) vs plain + replay,75.7,73.1,+2.6,+1.8,+3.3,6/6

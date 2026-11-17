@@ -16,26 +16,26 @@ arms:
 - replay: keeps all images of tasks 0-19 and mixes 50 into every batch
 - swr and replay
 
-6 seeds each.
+6 seeds each. cis below are paired 95% over seeds (`ci.py`).
 
 ## what happened
 
-**swr keeps plasticity.** on new tasks 250-299, plain drops to 81.6%, swr stays at 85.5%. swr won on all 6 seeds.
+**swr keeps plasticity.** on new tasks 250-299, plain drops to 81.6%, swr stays at 85.5%. swr won on all 6 seeds. gap is +3.9, 95% ci +3.4 to +4.4, so it's not noise.
 
 ![](results/figures/class_incremental_plasticity.png)
 
 **no replay = no memory.** tasks 0-19 sit at 0% by task 300. the model only ever predicts the newest classes.
 
-**swr and replay remembers best.** tasks 0-19 among all 600 classes at task 300: swr and replay 30.1% and still going up, plain and replay 20.4% and dropping. chance is about 0.2%. swr and replay won on all 6 seeds.
+**swr and replay remembers best.** tasks 0-19 among all 600 classes at task 300: swr and replay 30.1% and still going up, plain and replay 20.4% and dropping. chance is about 0.2%. swr and replay won on all 6 seeds (+9.8, ci +8.8 to +10.8).
 
 ![](results/figures/class_incremental_memory.png)
 
 **the catch: swr was quietly erasing stuff.** i tested recent tasks (250-299, not replayed) on just their own 2 classes at the end. plain and replay still tells them apart at 73%. swr and replay: 53%, basically a coin flip. checked the head: in swr, the rows for classes it stopped training sit at exactly fresh-init size (0.578, init is 0.577). in swr and replay the recent ones are at 0.633, almost back to init. in plain they stay at 1.0-1.3. swr was resetting them, because a class you stop training has near-zero gradient, so near-zero utility.
 
 **fix: don't run swr on the head.** swr and replay without the head:
-- plasticity same, 84.5%
-- tasks 0-19 same, 29.5%
-- recent pairs back to 75.7%
+- plasticity same, 84.5% (+0.1, ci -0.4 to +0.6)
+- tasks 0-19 0.6 lower, 29.5% vs 30.1% (ci -1.1 to -0.1). tiny, but real
+- recent pairs back to 75.7% from 53.3% (+22.4, ci +20.5 to +24.2)
 
 so the plasticity comes from swr on the body. the head resets were just deleting memory.
 
@@ -49,7 +49,7 @@ so the plasticity comes from swr on the body. the head resets were just deleting
 - plain: no change, 81.6% either way
 - swr: 85.5% -> 87.0%
 
-so the fair comparison for swr and replay (84.5%) is swr with extra images (87.0%). replay is 2.5 points worse at learning new tasks, and in exchange keeps 30% of tasks 0-19 instead of 0%.
+so the fair comparison for swr and replay (84.5%) is swr with extra images (87.0%). replay is 2.6 points worse at learning new tasks (ci +1.9 to +3.2), and in exchange keeps 30% of tasks 0-19 instead of 0%.
 
 **replay in the original setup (task-incremental, own head per task, 3 seeds):** replaying tasks 0-19 also kept plain backprop learning new tasks, not just remembering old ones. new tasks 250-299, plain backprop:
 - no replay: 77.8%
